@@ -20,7 +20,8 @@ export default new Vuex.Store({
   actions: {
     getAllRoom(context) {
       db.collection('rooms')
-        // .orderBy('createdAt')
+        //order by date createdAt
+        //.orderBy('createdAt')
         .onSnapshot((docs) => {
           const data = []
           docs.forEach(element => {

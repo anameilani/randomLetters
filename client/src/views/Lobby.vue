@@ -46,11 +46,8 @@
             </div>           
              <button type="button" class="btn button purple" data-dismiss="modal">Close</button>
           </div>
-            
         </div>
       </div>
-
-      
   </div>
 </template>
 
