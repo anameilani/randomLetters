@@ -107,9 +107,7 @@ export default {
                 this.getQuestion()
                 }
             }
-        }
-
-    },
+     },
     created(){
         this.getQuestion()
     }
