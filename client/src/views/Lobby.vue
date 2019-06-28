@@ -50,8 +50,7 @@
       </div>
 
       <div class="mt-5 row justify-content-between">
-        <div class="col-lg-3 mx-2 mb-3" v-for="(room, index) in rooms" :key="index">
-          {{rooms}}
+        <div class="col-lg-3 mx-2 mb-3" v-for="(room, index) in rooms" :key="index">  
           <div class="card text-center shadow-sm bg-white rounded" style="width: 18rem;">
             <div class="card-body">
               <h5 class="card-title">{{ room.name }}</h5>

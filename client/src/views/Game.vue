@@ -165,6 +165,8 @@ export default {
           console.log('Masuk checkA');
             this.isWrong=''
             if(this.answer === this.answerPlayer){
+                let myAudio = document.getElementById("audiocor");
+                myAudio.play();
                 this.player.score += 10
                 db.collection('rooms')
                   .doc(this.$route.params.id).get()
@@ -198,6 +200,8 @@ export default {
                 }
             }
             else{
+                let myAudio = document.getElementById("audio");
+                myAudio.play();
                 console.log('salah')
                 this.isWrong='Your answer is wrong!'
                 this.player.score -= 5
@@ -239,8 +243,16 @@ export default {
       .onSnapshot(
         doc => {
           this.roomData = doc.data()
-        //   this.player1name = doc.dataç().players[0].name
-        //   this.player1score = doc.data().players[0].score
+          let playerList = doc.data().players
+          console.log(playerList)
+          playerList.forEach((element) => {
+              if(element.score >= 100){
+                let pemenang = element.name
+                this.$swal(`Permainan Selesai Pemenangnya Adalah ${pemenang}`);
+                localStorage.clear()
+                this.$router.push('/')
+              }
+          })
         },
         err => {
           console.log(err,'errrrorr dinis');

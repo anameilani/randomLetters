@@ -8,6 +8,19 @@
   </div>
 </template>
 
+<script>
+let audio = new Audio('https://storage.googleapis.com/hacktiv-image/Eric%20Skiff%20-%20Were%20the%20Resistors.mp3');
+const playPromise = audio.play();
+if (playPromise !== null){
+    playPromise.catch(() => { audio.play(); })
+}
+
+export default {
+  
+}
+</script>
+
+
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

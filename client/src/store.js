@@ -75,7 +75,7 @@ export default new Vuex.Store({
           console.log(err)
         })
       } else {
-        console.log('maaf sudah penuh')
+        Vue.swal('Maaf Room Ini Sudah Penuh');
       }     
     },
     updateData(context,payload){
