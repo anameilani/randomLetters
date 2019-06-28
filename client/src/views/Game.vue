@@ -49,8 +49,19 @@ export default {
             answerPlayer: '',
             answer: '',
             index:0,
-            keyAnswer: ['haus','porsi','daring','jiplak', 'tanjung', 'piranti',
-                        'masyhur','swasembada','pramuniaga','ensiklopedia'],
+            keyAnswer: ['haus',
+                        'porsi',
+                        'daring',
+                        'jiplak',
+                        'tanjung',
+                        'piranti',
+                        'nyamuk',
+                        'masyhur',
+                        'influenza',
+                        'sekretaris',
+                        'swasembada',
+                        'pramuniaga',
+                        'ensiklopedia'],
             images:[
                 'https://asset-a.grid.id/crop/0x0:0x0/700x465/photo/2019/02/20/2532982389.jpg',
                 'https://www.budgetbytes.com/wp-content/uploads/2018/04/The-Best-Weeknight-Pasta-Sauce-plate-H1.jpg',
@@ -58,7 +69,10 @@ export default {
                 'https://www.lifewire.com/thmb/VODNGWu6sSbLmEgV1MPXurJX_3g=/768x0/filters:no_upscale():max_bytes(150000):strip_icc()/65-copy-gmail-from-one-account-to-another-57f3f9025f9b586c35006fea.png',
                 'https://www.inovasee.com/wp-content/uploads/2016/06/Tanjung-Benoa-758x554.jpg',
                 'http://4.bp.blogspot.com/-1OcoLhOD6tk/T36RYtbvodI/AAAAAAAAABw/LSQ74uZTXa8/s1600/piranti-komputer.jpg',
+                'https://media.tabloidbintang.com/files/thumb/56abdb4a68cbf518d097d19c3caf8266.jpg/745',
                 'https://yt3.ggpht.com/a/AGF-l7-NQdbfxI9mOxPjpTV5NZ34oHC56_TgbLIHAA=s900-mo-c-c0xffffffff-rj-k-no',
+                'https://www.rockandpop.cl/wp-content/uploads/2019/06/influenza-1.jpg',
+                'http://sekertarisku.com/wp-content/uploads/2015/05/sekretaris-handal-sekertarisku.png',
                 'https://cdn2.tstatic.net/manado/foto/bank/images/anggota-koramil-1303-09bolaang-babinsa-desa-langago_20180910_114003.jpg',
                 'https://www.superindo.co.id/karir/lib/images/m_position/7__Pramuniaga_kasir_131.jpg',
                 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Persian-encyclopedia.jpg/300px-Persian-encyclopedia.jpg'
@@ -107,9 +121,7 @@ export default {
                 this.getQuestion()
                 }
             }
-        }
-
-    },
+        },
     created(){
         this.getQuestion()
     }
