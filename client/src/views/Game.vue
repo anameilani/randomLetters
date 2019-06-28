@@ -1,4 +1,5 @@
 <template>
+    <div>
     <div id="containerGame">
         <div id="headerText">
             <h3>RandomLetter</h3>
@@ -32,23 +33,79 @@
                 </div>
             </form>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="row mt-5">
+                    <div class="col" style=" text-align: center;">
+                        <h1 class="animated heartBeat" style="animation-iteration-count: infinite;font-family: 'Baloo Bhai', cursive;">Live Score</h1>
+                    </div>
+                </div>
+                <div class="scoreboard mt-3 animated slideInRight" style="border:1px solid black; background-color: black; color: white; 
+                height: 230px; text-align: center;font-family: 'Baloo Bhai', cursive;">
+                    <div class="row mt-3">
+                        <div class="col">
+                            <h1>{{roomData.players[0].name}}</h1>
+                        </div>
+                        <div class="col">
+                            <h1>{{roomData.players[1].name}}</h1>
+                        </div>
+                        <div class="col">
+                            <h1>{{roomData.players[2].name}}</h1>
+                        </div>
+                        <div class="col">
+                            <h1></h1>
+                        </div>
+                        <div class="col">
+                            <h1></h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h1>VS</h1>
+                        </div>
+                    </div>
+                    <div class="row" style="text-align:center;font-size: 80px; font-family: 'Orbitron', sans-serif; color: red">
+                        <div class="col">
+                            <p>{{roomData.players[0].score}}</p>
+                        </div>
+                        <div class="col">
+                            <p>{{roomData.players[1].score}}</p>
+                        </div>
+                        <div class="col">
+                            <p>{{roomData.players[2].score}}</p>
+                        </div>
+                        <div class="col">
+                            <p></p>
+                        </div>
+                        <div class="col">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+  </div>
 </template>
 
 <script>
+import db from '../api/firebaseAPI';
+import { mapState, mapMutations, mapActions } from 'vuex';
+
 export default {
     name:'gamePage',
     data(){
         return {
             mode: 'play',
             isWrong:'',
+            roomData:{},
             player:{
                 score: 0
             },
             question: '',
             answerPlayer: '',
             answer: '',
-            index:0,
+            coba:0,
             keyAnswer: ['haus',
                         'porsi',
                         'daring',
@@ -76,24 +133,24 @@ export default {
                 'https://cdn2.tstatic.net/manado/foto/bank/images/anggota-koramil-1303-09bolaang-babinsa-desa-langago_20180910_114003.jpg',
                 'https://www.superindo.co.id/karir/lib/images/m_position/7__Pramuniaga_kasir_131.jpg',
                 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Persian-encyclopedia.jpg/300px-Persian-encyclopedia.jpg'
-
-
             ],
             hintImage:''
         }
     },
     methods:{
         getQuestion(){
-            // let indexInput= Math.floor(Math.random() * this.keyAnswer.length)
+            console.log('Masuk getQ');
+            // let cobaInput= Math.floor(Math.random() * this.keyAnswer.length)
             this.answerPlayer=''
-            let input= this.keyAnswer[this.index]
-            this.answer= this.keyAnswer[this.index]
-            this.hintImage= this.images[this.index]
+            let input= this.keyAnswer[this.coba]
+            this.answer= this.keyAnswer[this.coba]
+            this.hintImage= this.images[this.coba]
 
             this.question= this.randomLetter(input)
-            this.index++
+            this.coba++
         },
         randomLetter(input){
+            console.log('Masuk randomL');
             let word= input.split('')
             let randomWord= ''
             for(let i=0; i<word.length; i++){
@@ -105,9 +162,33 @@ export default {
             return randomWord
         },
         checkAnswer(){
+          console.log('Masuk checkA');
             this.isWrong=''
             if(this.answer === this.answerPlayer){
                 this.player.score += 10
+                db.collection('rooms')
+                  .doc(this.$route.params.id).get()
+                  .then((doc) => {
+                  if (doc.exists) {
+                    const data = []
+                    let playerList = doc.data().players
+                    playerList.forEach(element => {
+                    if(element.name == localStorage.getItem('username')){
+                        element.score += 10
+                    }
+                    data.push(element)
+                });
+                  this.$store.dispatch('updateData',{
+                  id:this.$route.params.id,
+                  data
+                  })
+                } 
+                else {
+                  console.log("No such document!");
+                }
+                }).catch(function(error) {
+                  console.log("Error getting document:", error);
+                });
                 this.answerPlayer=''
                 if(this.player.score >= 100){
                     this.mode= 'win'
@@ -115,18 +196,60 @@ export default {
                 else{
                     this.getQuestion()
                 }
-            }else{
-                this.isWrong='Your answer is wrong!'
-                this.player.score -=5
-                this.getQuestion()
-                }
             }
-        },
-    created(){
-        this.getQuestion()
+            else{
+                console.log('salah')
+                this.isWrong='Your answer is wrong!'
+                this.player.score -= 5
+                db.collection('rooms')
+                  .doc(this.$route.params.id).get()
+                  .then((doc) => {
+                    console.log('sebelum salah..',doc)
+                    if(doc.exists){
+                      const data = []
+                      let playerList = doc.data().players
+                      playerList.forEach((element) => {
+                        if(element.name == localStorage.getItem('username')){
+                          element.score -= 5
+                        }
+                        data.push(element)
+                      }) 
+                      this.$store.dispatch('updateData',{
+                      id:this.$route.params.id,
+                      data
+                      })
+                    }
+                  })
+                //   this.$store.dispatch('updateData',{
+                //   id:this.$route.params.id,
+                //   data
+                //   })
+            }        
     }
-}
+  }, 
+  computed:{
+    ...mapState(['rooms'])
+  },
+  created() {
+    this.getQuestion();
+  },
+  mounted(){
+    db.collection("rooms")
+      .doc(this.$route.params.id)
+      .onSnapshot(
+        doc => {
+          this.roomData = doc.data()
+        //   this.player1name = doc.dataç().players[0].name
+        //   this.player1score = doc.data().players[0].score
+        },
+        err => {
+          console.log(err,'errrrorr dinis');
+        }
+      );
+  }
+};
 </script>
+
 
 <style scoped>
     #containerGame{
@@ -134,7 +257,7 @@ export default {
         text-align: center;
         color: white;
         background-color:#ED7F7F;
-        height: 800px;
+        height: 1300px;
         font-family: 'Chewy', sans-serif;
     }
 
@@ -216,5 +339,4 @@ export default {
         font-weight: bold;
         font-size: 40px;
     }
-
 </style>

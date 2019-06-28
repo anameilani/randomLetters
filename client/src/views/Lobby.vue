@@ -48,9 +48,50 @@
           </div>
         </div>
       </div>
+
+      <div class="mt-5 row justify-content-between">
+        <div class="col-lg-3 mx-2 mb-3" v-for="(room, index) in rooms" :key="index">
+          {{rooms}}
+          <div class="card text-center shadow-sm bg-white rounded" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{ room.name }}</h5>
+              <h4 class="card-text">{{ room.players.length}}/3</h4>
+              <a href="#" class="btn yellow mt-2 disabled" v-if="room.players.length === 5">Full</a>
+              <a href="" class="btn blue mt-2" v-else @click.prevent="join(room.id)" ><img src="https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.pixabay.com%2Fphoto%2F2014%2F12%2F21%2F23%2F54%2Fdoor-576282_960_720.png&f=1" width="146px"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
   </div>
 </template>
 
 <script>
-export default {};
+import { mapState, mapMutations, mapActions } from 'vuex';
+
+export default {
+  name:'Lobby',
+  data(){
+    return{
+      roomName:'',
+    }
+  },
+  created(){
+    this.$store.dispatch('getAllRoom');
+  },
+  computed:{
+    ...mapState(['rooms'])
+  },
+  methods:{
+    registerRoom(){
+      this.$store.dispatch('createRoom', this.roomName);
+      localStorage.setItem('room', this.roomName);
+      console.log("masuk create room");
+      $('#exampleModalCenter').modal('toggle')
+    },
+    join(roomId) {
+      this.$store.dispatch('joinRoom', roomId);
+    },
+  }
+};
 </script>
