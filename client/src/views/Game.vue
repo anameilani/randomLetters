@@ -8,10 +8,6 @@
              <h3>Congratulation you are the winner!</h3>
              <h4>Your Score: {{player.score}}</h4>
         </div>
-        <div v-if="mode == 'end'" id="endSection">
-            <h3>The End</h3>
-            <h4>Your Score: {{player.score}}</h4>
-        </div>
         <div v-if="mode == 'play'" id="boardSection">
             <div class="row">
                 <div class="col-sm-5 offset-sm-1" id="hintSection">
@@ -20,7 +16,7 @@
                 </div>
                 <div class="col-sm-5">
                     <h1 id="headerQuestion">Random Letter:</h1>
-                    <div class="card bg-dark" style="margin-left: 30%; margin-top:10%; width:200px">
+                    <div class="card" style="margin-left: 15%; margin-top:10%; width:400px; color:#ED7F7F">
                         <div class="card-body" id="questionSection">{{question}}</div>
                     </div>
                 </div>
@@ -102,16 +98,10 @@ export default {
                 if(this.player.score >= 100){
                     this.mode= 'win'
                 }
-                else if(this.index== 10){
-                    this.mode= 'end'
-                }
                 else{
                     this.getQuestion()
                 }
             }else{
-                if(this.index == 10){
-                    this.mode= 'end'
-                }else{
                 this.isWrong='Your answer is wrong!'
                 this.player.score -=5
                 this.getQuestion()
@@ -131,26 +121,32 @@ export default {
         zoom: 90%;
         text-align: center;
         color: white;
-        background-color:#F08B33;
+        background-color:#ED7F7F;
         height: 800px;
         font-family: 'Chewy', sans-serif;
     }
 
-    #headerText{
+    #headerText h3{
         color: #4C241D;
-        font-size: 20px;
+        font-size: 40px;
         text-shadow: 1px 1px 0px lightcoral;
+    }
+
+    #headerText h5{
+        color:  #FACD55;
+        font-size: 20px;
     }
 
     #headerQuestion{
         margin-top: 50px;
         font-size: 35px;
         font-weight: bold;
+        color: #FACD55;
     }
     #questionSection{
         font-size: 40px;
         font-weight: bold;
-        color:#ED7F7F;
+        color:#4C241D;
     }
 
     form {
@@ -165,7 +161,7 @@ export default {
     }
 
     #hintSection h4{
-        color: white;
+        color: #FACD55;
         font-weight: bold;
         font-size: 35px;
         margin-top: 30px;
