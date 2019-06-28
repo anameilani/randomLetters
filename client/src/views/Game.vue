@@ -1,4 +1,5 @@
 <template>
+    <div>
     <div id="containerGame">
         <div id="headerText">
             <h3>RandomLetter</h3>
@@ -33,15 +34,74 @@
             </form>
         </div>
     </div>
+  
+     <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="row mt-5">
+                    <div class="col" style=" text-align: center;">
+                        <h1 class="animated heartBeat" style="animation-iteration-count: infinite;font-family: 'Baloo Bhai', cursive;">Live Score</h1>
+                    </div>
+                </div>
+                <div class="scoreboard mt-3 animated slideInRight" style="border:1px solid black; background-color: black; color: white; 
+                height: 230px; text-align: center;font-family: 'Baloo Bhai', cursive;">
+                    <div class="row mt-3">
+                        <div class="col">
+                            <h1>{{roomData.players[0].name}}</h1>
+                        </div>
+                        <div class="col">
+                            <h1>{{roomData.players[1].name}}</h1>
+                        </div>
+                        <div class="col">
+                            <h1>{{roomData.players[2].name}}</h1>
+                        </div>
+                        <div class="col">
+                            <h1></h1>
+                        </div>
+                        <div class="col">
+                            <h1></h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h1>VS</h1>
+                        </div>
+                    </div>
+                    <div class="row" style="text-align:center;font-size: 80px; font-family: 'Orbitron', sans-serif; color: red">
+                        <div class="col" style="border-style: solid;border-color: white;">
+                            <p>{{roomData.players[0].score}}</p>
+                        </div>
+                        <div class="col" style="border-style: solid;border-color: white">
+                            <p>{{roomData.players[1].score}}</p>
+                        </div>
+                        <div class="col" style="border-style: solid;border-color: white">
+                            <p>{{roomData.players[2].score}}</p>
+                        </div>
+                        <div class="col" style="border-style: solid;border-color: white">
+                            <p></p>
+                        </div>
+                        <div class="col" style="border-style: solid;border-color: white">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import db from '../api/firebaseAPI';
+import { mapState, mapMutations, mapActions } from 'vuex';
+
 export default {
     name:'gamePage',
     data(){
         return {
             mode: 'play',
             isWrong:'',
+            roomData:{},
             player:{
                 score: 0
             },
@@ -108,6 +168,29 @@ export default {
             this.isWrong=''
             if(this.answer === this.answerPlayer){
                 this.player.score += 10
+                db.collection('rooms')
+                  .doc(this.$route.params.id).get()
+                  .then((doc) => {
+                  if (doc.exists) {
+                    const data = []
+                    let playerList = doc.data().players
+                    playerList.forEach(element => {
+                    if(element.name == localStorage.getItem('username')){
+                        element.score += 10
+                    }
+                    data.push(element)
+                });
+                  this.$store.dispatch('updateData',{
+                  id:this.$route.params.id,
+                  data
+                  })
+                } 
+                else {
+                  console.log("No such document!");
+                }
+                }).catch(function(error) {
+                  console.log("Error getting document:", error);
+                });
                 this.answerPlayer=''
                 if(this.player.score >= 100){
                     this.mode= 'win'
@@ -121,12 +204,30 @@ export default {
                 this.getQuestion()
                 }
             }
-     },
-    created(){
-        this.getQuestion()
-    }
-}
+  }, 
+  computed:{
+    ...mapState(['rooms'])
+  },
+  created() {
+    this.getQuestion();
+  },
+  mounted(){
+    db.collection("rooms")
+      .doc(this.$route.params.id)
+      .onSnapshot(
+        doc => {
+          this.roomData = doc.data()
+        //   this.player1name = doc.dataç().players[0].name
+        //   this.player1score = doc.data().players[0].score
+        },
+        err => {
+          console.log(err,'errrrorr dinis');
+        }
+      );
+  }
+};
 </script>
+
 
 <style scoped>
     #containerGame{
@@ -216,5 +317,4 @@ export default {
         font-weight: bold;
         font-size: 40px;
     }
-
 </style>
